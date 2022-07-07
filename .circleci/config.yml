@@ -166,7 +166,6 @@ jobs:
           fingerprints: ["46:d0:99:ec:74:ad:03:10:91:6f:c1:30:c1:ee:46:e0"]
       - attach_workspace:
           at: ~/project/.circleci/ansible
-      - run: yum install -y tar gzip
       - run:
           name: Install dependencies
           command: |
