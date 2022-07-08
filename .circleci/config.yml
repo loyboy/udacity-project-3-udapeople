@@ -198,7 +198,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7}/1
+              curl -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7}/1 -H "Content-Length: 0"
             fi
 
   deploy-frontend:
@@ -210,7 +210,7 @@ jobs:
       - run:
           name: Install dependencies like nodejs
           command: |
-            curl -sL https://rpm.nodesource.com/setup_13.x | sudo bash -
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install nodejs
       - run:
           name: Get backend url
@@ -230,6 +230,35 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
       - destroy-environment 
+
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["46:d0:99:ec:74:ad:03:10:91:6f:c1:30:c1:ee:46:e0"]
+      - attach_workspace:
+          at: ~/project/.circleci/ansible
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
+      - destroy-environment
       
 workflows:
   default:

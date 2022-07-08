@@ -10,3 +10,8 @@
     - ansible_stdout_callback: yaml
   roles:
     - deploy
+
+  post_tasks:
+    - name: "run the backend"
+      become: true
+      raw: (cd /var/lib/backend && npm install && pm2 stop default && pm2 start npm -- start )
