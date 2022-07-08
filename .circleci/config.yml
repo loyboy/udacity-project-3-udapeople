@@ -149,13 +149,13 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> ~/project/.circleci/ansible/inventory.txt
-            cat ~/project/.circleci/ansible/inventory.txt
+              --output text >> ~/inventory.txt
+            cat ~/inventory.txt
 
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - inventory.txt
 
       - destroy-environment 
 
@@ -167,7 +167,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["46:d0:99:ec:74:ad:03:10:91:6f:c1:30:c1:ee:46:e0"]
       - attach_workspace:
-          at: ~/project/.circleci/ansible
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -177,9 +177,10 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            cat ~/project/.circleci/ansible/inventory.txt
-            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt configure-server.yml    
-
+            cat ~/inventory.txt
+            ansible-playbook -i ~/inventory.txt configure-server.yml    
+      - destroy-environment
+      
   run-migrations:
     docker:
       - image: circleci/node:13.8.0
@@ -210,7 +211,7 @@ jobs:
       - run:
           name: Install dependencies like nodejs
           command: |
-            yum install nodejs
+            yum -y install nodejs npm --enablerepo=epel
       - run:
           name: Get backend url
           command: |
