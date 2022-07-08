@@ -16,8 +16,8 @@
 - name: "install dependencies."
   ansible.builtin.apt:
     pkg:
-    - nodejs=13.8.0
-    - npm=6.13.7
+    - nodejs
+    - npm
 
 - name: "install pm2"
   become: yes
