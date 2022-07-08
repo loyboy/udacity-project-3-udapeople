@@ -177,8 +177,8 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            cat inventory.txt
-            ansible-playbook -i inventory.txt configure-server.yml    
+            cat ~/project/.circleci/ansible/inventory.txt
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt configure-server.yml    
 
   run-migrations:
     docker:
@@ -210,7 +210,6 @@ jobs:
       - run:
           name: Install dependencies like nodejs
           command: |
-            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install nodejs
       - run:
           name: Get backend url
@@ -255,11 +254,11 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            cat ~/project/.circleci/ansible/inventory.txt
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt deploy-backend.yml
 
       - destroy-environment
-      
+
 workflows:
   default:
     jobs:
