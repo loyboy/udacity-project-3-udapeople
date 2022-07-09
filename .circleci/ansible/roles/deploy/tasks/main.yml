@@ -1,10 +1,5 @@
 ---
-- name: Creates directory for backend code
-  file:
-    path: /var/lib/backend
-    state: directory
-    
-- name: Extract backend into /var/lib/backend
+- name: Extract backend into remote directory
   ansible.builtin.unarchive: 
     src: ~/project/artifact.tar.gz
-    dest: /var/lib/backend
+    dest: ~/web
