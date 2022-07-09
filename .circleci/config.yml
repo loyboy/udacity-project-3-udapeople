@@ -14,16 +14,13 @@ commands:
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    parameters:
-      workflow_id:
-        type: string 
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_<< parameters.workflow_id >> )
+            SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7} )
             if(( $SUCCESS == 1 )); 
             then
               cd ~/project/backend
@@ -321,9 +318,9 @@ jobs:
             else
               return 1
             fi
+
       - destroy-environment
       - revert-migrations
-        workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cloudfront-update:
     docker:
@@ -343,9 +340,9 @@ jobs:
               --stack-name CloudFrontStack \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
+
       - destroy-environment
-      - revert-migrations 
-        workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations
   
   cleanup:
     docker:
@@ -398,10 +395,6 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
