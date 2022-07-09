@@ -132,6 +132,7 @@ jobs:
             equal: [ master, << pipeline.git.branch >> ]
           steps:
             - run: echo "I am on master branch now!"
+      - run: yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
