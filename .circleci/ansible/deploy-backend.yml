@@ -18,4 +18,4 @@
   post_tasks:
     - name: "run the backend"
       become: true
-      raw: ( cd ~/web && npm install && pm2 stop default && pm2 start npm -- start )
+      raw: ( cd ~/web && pm2 stop default && pm2 start npm -- start )
