@@ -2,4 +2,4 @@
 - name: Extract backend into remote directory
   ansible.builtin.unarchive: 
     src: ~/project/artifact.tar.gz
-    dest: ~/web
+    dest: /home/ubuntu/myfiles

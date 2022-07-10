@@ -21,10 +21,11 @@
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false
 
-    - name: "Create web directory"
-      become: true
-      raw: mkdir ~/web
-      changed_when: false
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/ubuntu/myfiles
+        state: directory
+        mode: '0755'
 
   # Get the environment variables from CircleCI and add to the EC2 instance
   environment:  
@@ -40,3 +41,13 @@
 
   roles:
     - configure-server
+
+  post_tasks:
+    - name: "Check the deploy directory is it exists"
+      ansible.builtin.stat:
+        path: /home/ubuntu/myfiles
+      register: dir_to_check
+    - name: Directory found
+      ansible.builtin.debug:
+        msg: "Directory is present"
+      when: dir_to_check.stat.isdir is defined and dir_to_check.stat.isdir
