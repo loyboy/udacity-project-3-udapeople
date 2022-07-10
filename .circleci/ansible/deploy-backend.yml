@@ -18,4 +18,10 @@
   post_tasks:
     - name: "run the backend"
       become: true
-      raw: ( cd /home/ubuntu/myfiles && pm2 start npm -- start )
+      shell: |
+        cd /home/ubuntu/myfiles
+        pm2 start npm -- start
+        pm2 restart
+      register: backend
+    - debug: msg="{{ backend.stdout }}"
+    - debug: msg="{{ backend.stderr }}"
