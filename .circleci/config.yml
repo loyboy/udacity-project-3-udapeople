@@ -356,7 +356,7 @@ jobs:
           condition:
             equal: [ master, << pipeline.git.branch >> ]
           steps:
-            - run: echo "I am on master branch now!"
+            - run: echo "I am on master branch now !"
       - run:
           name: Install dependencies
           command: |
@@ -382,7 +382,7 @@ jobs:
             fi
 
       - destroy-environment
-      - revert-migrations
+      - revert-migrations 
 
 workflows:
   default:
