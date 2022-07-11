@@ -318,14 +318,14 @@ jobs:
             if curl -s ${URL} | grep "Welcome"
             then
               # Change this to 0 after the job fails
-              return 0
+              return 1
             else
               return 1
             fi
 
       - destroy-environment
       - revert-migrations
-
+ 
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
