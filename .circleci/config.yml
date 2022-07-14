@@ -318,7 +318,7 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              # Change this to 0 after the job fails
+              # Change this to 0 after the job fails again
               return 0
             else
               return 1
@@ -326,7 +326,7 @@ jobs:
 
       - destroy-environment
       - revert-migrations
- 
+  
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
