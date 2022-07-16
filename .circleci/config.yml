@@ -298,6 +298,7 @@ jobs:
           command: |
             apk add --update curl
             apk add --update aws-cli
+            apk add --update nodejs npm
       - run:
           name: Backend smoke test
           command: |
@@ -329,7 +330,7 @@ jobs:
   
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+      - image: sleavely/node-awscli:14.x
     steps:
       - checkout
       - when:
@@ -350,7 +351,7 @@ jobs:
   
   cleanup:
     docker:
-      - image: amazon/aws-cli
+      - image: sleavely/node-awscli:14.x
     steps:
       - checkout
       - when:
@@ -361,7 +362,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y curl
+            apt-get install -y curl
       - run:
           name: Remove old stacks and files
           command: |
