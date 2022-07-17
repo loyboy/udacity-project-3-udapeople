@@ -22,7 +22,7 @@ commands:
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable vv
             SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7} )
-            if [ $SUCCESS -eq "1" ]
+            if [ $SUCCESS -eq 1 ]
             then
               cd backend
               npm install
