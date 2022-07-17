@@ -2,13 +2,13 @@
 https://github.com/loyboy/udacity-project-3-udapeople
 
 [URL02]
-http://udapeople-be50f05.s3-website-us-east-1.amazonaws.com/#/employees
+http://udapeople-6220ddb.s3-website-us-east-1.amazonaws.com/#/employees
 
 [URL03]
-dwtfyht5nkirc.cloudfront.net
+http://d2m37fmw21osqq.cloudfront.net/#/employees
 
 [URL04]
-http://44.202.254.249:3030/api/status
+http://3.86.252.57:3030/api/status
 
 [URL05]
 http://54.173.171.119:9090/targets
