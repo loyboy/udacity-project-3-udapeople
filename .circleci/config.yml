@@ -24,7 +24,7 @@ commands:
             SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7} )
             if(( $SUCCESS == 1 )); 
             then
-              cd ~/project/backend
+              cd backend
               npm install
               npm run migration:revert            
             fi
@@ -213,6 +213,7 @@ jobs:
       - run:
           name: Send migration results to kV Immanuel.co 
           command: |
+            cat ~/project/backend/migrations_dump.txt
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               curl -X POST https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7}/1 -H "Content-Length: 0"
@@ -285,7 +286,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine:latest
+      - image: python:3.7.11-alpine3.14
     steps:
       - checkout
       - when:
