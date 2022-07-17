@@ -20,11 +20,12 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable vv
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable vv1
             SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7} )
+            echo ${SUCCESS}
             if [[ $SUCCESS == "1" ]]
             then
-              cd backend
+              cd ~/project/backend
               npm install
               npm run migration:revert            
             fi
