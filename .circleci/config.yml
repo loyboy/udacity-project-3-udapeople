@@ -288,7 +288,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alphine:latest
+      - image: alpine:latest
     steps:
       - checkout
       - when:
