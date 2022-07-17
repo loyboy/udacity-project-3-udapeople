@@ -331,27 +331,6 @@ jobs:
       - destroy-environment
       - revert-migrations
   
-  cloudfront-update:
-    docker:
-      - image: sleavely/node-awscli:14.x
-    steps:
-      - checkout
-      - when:
-          condition:
-            equal: [ master, << pipeline.git.branch >> ]
-          steps:
-            - run: echo "I am on master branch now!"
-      - run:
-          name: Update cloudfront distribution
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --stack-name CloudFrontStack \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" 
-
-      - destroy-environment
-      - revert-migrations
-  
   cleanup:
     docker:
       - image: sleavely/node-awscli:14.x
@@ -386,6 +365,27 @@ jobs:
             fi
       - destroy-environment
       - revert-migrations 
+
+  cloudfront-update:
+    docker:
+      - image: sleavely/node-awscli:14.x
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run: echo "I am on master branch now!"
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name CloudFrontStack \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" 
+
+      - destroy-environment
+      - revert-migrations
 
 workflows:
   default:
@@ -436,14 +436,14 @@ workflows:
               branches:
                 only:
                   - master
-      - cloudfront-update:
+      - cleanup:
           requires: [smoke-test]
           filters:
               branches:
                 only:
                   - master
-      - cleanup:
-          requires: [cloudfront-update]
+      - cloudfront-update:
+          requires: [cleanup]
           filters:
               branches:
                 only:
