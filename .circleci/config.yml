@@ -23,7 +23,7 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable vv1
             SUCCESS=$( curl https://keyvalue.immanuel.co/api/KeyVal/GetValue/cb3xylfr/migration_${CIRCLE_WORKFLOW_ID:0:7} )
             echo ${SUCCESS}
-            if [[ $SUCCESS == "1" ]]
+            if [[ "$SUCCESS" == "1" ]]
             then
               echo "run migration revert"
               cd ~/project/backend
@@ -288,7 +288,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine:latest
+      - image: python:3.7.11-alpine3.14
     steps:
       - checkout
       - when:
@@ -327,7 +327,7 @@ jobs:
             else
               return 1
             fi
-            
+
       - destroy-environment
       - revert-migrations
   
