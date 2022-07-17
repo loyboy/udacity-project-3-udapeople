@@ -14,7 +14,7 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.,..
+    description: Revert the last migration if successfully run in the current workflow.,
     steps:
       - run:
           name: Revert migrations
@@ -25,6 +25,7 @@ commands:
             echo ${SUCCESS}
             if [[ $SUCCESS == "1" ]]
             then
+              echo "run migration revert"
               cd ~/project/backend
               npm install
               npm run migration:revert            
@@ -305,10 +306,10 @@ jobs:
             export BACKEND_IP=$( aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag-value,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --output text )
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            sleep 5s
+            sleep 15s
             if curl "${API_URL}/api/status" | grep "ok"
             then
-              return 1
+              return 0
             else
               return 1
             fi
@@ -320,7 +321,7 @@ jobs:
             if curl -s ${URL} | grep "Welcome"
             then
               # Change this to 0 after the job fails again c
-              return 0
+              return 1
             else
               return 1
             fi
